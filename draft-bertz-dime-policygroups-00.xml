@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="US-ASCII"?>
-<!-- This template is for creating an Internet Draft using xml2rfc,
-    which is available here: http://xml.resource.org. -->
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
-<!-- One method to get references from the online citation libraries.
-    There has to be one entity for each item to be referenced.
-    An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC5777 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5777.xml">
@@ -43,8 +38,6 @@
    <keyword>filter</keyword>
    <keyword>policy</keyword>
    <keyword>groups</keyword>
-   <keyword>groups</keyword>
-
    <abstract>
 <t>
      This document defines optional Diameter attributes for efficient
@@ -244,74 +237,44 @@
 <t>
    EQ            0
 </t><t>
-      The Membership-Values are equal.  This is an exact value match.
+      The Membership-Values are equal.
 </t><t>
-   ANDNZ         1
+   SUPER         1
 </t><t>
-      A bitwise AND is performed on the Membership-Values and the
-      result equals zero. This determines if the Authorized User
-      and the Policy Entity have common '1' values (any of
-      membership test).
+      The Membership-Assignment's Membership-Value is a superset of the
+      Policy-Membership's Membership-Value, i.e. the may be equal.
 </t>
-      <figure>
-        <artwork><![CDATA[
-    (Membership-Assignment's Membership-Value AND
-      Policy-Membership's Membership-Value) <> 0
-]]>
-        </artwork>
-      </figure>
-   <t>
-   ANDZ      2
+<t>
+   PSUPER      2
 </t><t>
-      A bitwise AND is performed on the negated (bitwise NOT) of the
-      Membership-Assignment's Membership-Value and the
-      Policy-Membership's Membership-Value.  The result is then compared
-      to being equal to zero.  The test ensures the Authorized User
-      has none of the same bits set that the Policy Entity (a
-      non-membership test).
+      The Membership-Assignment's Membership-Value is a proper superset
+      of the Policy-Membership's Membership-Value.
 </t>
-      <figure>
-        <artwork><![CDATA[
-    (Membership-Assignment's Membership-Value AND
-      Policy-Membership's Membership-Value) == 0
-]]>
-        </artwork>
-      </figure>
-  <t>
-   ANDEQ      3
+<t>
+   SUB     3
 </t><t>
-      A bitwise AND is performed on the Membership-Values and the
-      result equals the Membership-Assignment's Membership-Value.
-      This determines if the Authorized User has the same bits set
-      as Policy Entity (membership test). NOTE that the Authorized
-      User MAY have more bits set than those in the
-      Membership-Assignment, i.e. it may be a proper superset.
+      The Membership-Assignment's Membership-Value is a subset of the
+      Policy-Membership's Membership-Value, i.e. the may be equal.
 </t>
-<figure>
-        <artwork><![CDATA[
-    (Membership-Assignment's Membership-Value AND
-      Policy-Membership's Membership-Value) ==
-        Membership-Membership's Membership-Value
-]]>
-        </artwork>
-      </figure>
-  <t>
-  INVANDZ      4
+<t>
+  PSUB      4
 </t><t>
-      A bitwise AND is performed on the negated (bitwise NOT) of the
-      Membership-Assignment's Membership-Value and the
-      Policy-Membership's Membership-Value.  The result is then compared
-      to being equal to zero.  This ensures that the Authorized
-      User has  bits set that are a proper subset of the bits
-      set for the Policy Entity (a strict membership test).
+      The Membership-Assignment's Membership-Value is a proper subset
+      of the Policy-Membership's Membership-Value.
 </t>
-<figure>
-        <artwork><![CDATA[
-    (NOT(Membership-Assignment's Membership-Value) AND
-      Policy-Membership's Membership-Value) == 0
-]]>
-        </artwork>
-      </figure>
+<t>
+  OVERLAP      5
+</t><t>
+      The Membership-Assignment's Membership-Value has overlap with
+      the Policy-Membership's Membership-Value.  They may be equal or
+      have some form of subset / superset relationship.
+</t>
+<t>
+  NONOVERLAP      6
+</t><t>
+      The Membership-Assignment's Membership-Value has no
+      intersection with the Policy-Membership's Membership-Value.
+</t>
 </section>
 </section>
 <section title="Lifecycle Considerations">
@@ -345,7 +308,41 @@
     Policy Entity to the Authorized User's session.
 </t>
 </section>
-   <section anchor="IANA" title="IANA Considerations">
+<section title="Example">
+<section title="Rule Sets" anchor="rulesetex">
+<t>
+  A policy administrator has defined three 'default rule sets' based
+  upon various product options selected by a Customer.  Each rule set
+  consists of twenty Filter-Rules as defined in <xref target="RFC5777"/>.
+</t>
+<t>
+  Rules that are part of Rule Set 1 are given a Membership-Value of
+  1, Rule Set 2 members are given the value 2 and Rule Set
+  three members have a value of 4 in their respective
+  Membership-Assignment values.  All Membership-Assignments have the
+  Membership-Domain of "Product X" and a Match-Type of EQ (Equals).
+</t>
+<t>
+  When a User is Authorized for service usage, a Policy-Membership
+  value is provided with the appropriate Membership-Value set to
+  1, 2 or 4 and a Membership-Domain of "Product X".  The
+  Diameter Client can then appropriately the correct 20 Filter-Rules.
+</t>
+ </section>
+<section title="Rule in multiple sets (1 Domain)" anchor="sharedruleex">
+<t>
+  Expanding upon our example from above <xref target="rulesetex"/>, a new
+  Filter-Rule is added that is part of both Rule Set 1 and Rule
+  Set 2.
+</t>
+<t>
+  According, the Membership-Assignment has a Membership-Domain of
+  "Product X", a Membership-Value of 3 and a Match-Type of
+  OVERLAP.  Thus, any Policy-Membership whose Membership-Value is set
+  to 1 or 2 will have this Filter-Rule applied.
+</t>
+</section>
+<section anchor="IANA" title="IANA Considerations">
 <t>
    IANA allocated AVP codes in the IANA-controlled namespace registry
    specified in Section 11.1.1 of <xref target="RFC6733"/> for the following AVPs that
@@ -416,40 +413,6 @@
    security; i.e., TLS/TCP, DTLS/SCTP or IPsec. Use of the AVPs
    defined in this document MUST take into consideration the security
    issues and requirements of the Diameter base protocol.
-</t>
-</section>
-<section title="Example">
- <section title="Rule Sets" anchor="rulesetex">
-<t>
-  A policy administrator has defined three 'default rule sets' based
-  upon various product options selected by a Customer.  Each rule set
-  consists of twenty Filter-Rules as defined in <xref target="RFC5777"/>.
-</t>
-<t>
-  Rules that are part of Rule Set 1 are given a Membership-Value of
-  1, Rule Set 2 members are given the value 2 and Rule Set
-  three members have a value of 4 in their respective
-  Membership-Assignment values.  All Membership-Assignments have the
-  Membership-Domain of "Product X" and a Match-Type of EQ (Equals).
-</t>
-<t>
-  When a User is Authorized for service usage, a Policy-Membership
-  value is provided with the appropriate Membership-Value set to
-  1, 2 or 4 and a Membership-Domain of "Product X".  The
-  Diameter Client can then appropriately the correct 20 Filter-Rules.
-</t>
- </section>
-<section title="Rule in multiple sets (1 Domain)" anchor="sharedruleex">
-<t>
-  Expanding upon our example from above <xref target="rulesetex"/>, a new
-  Filter-Rule is added that is part of both Rule Set 1 and Rule
-  Set 2.
-</t>
-<t>
-  According, the Membership-Assignment has a Membership-Domain of
-  "Product X", a Membership-Value of 3 and a Match-Type of
-  ANDNZ.  Thus, any Policy-Membership whose Membership-Value is set
-  to 1 or 2 will have this Filter-Rule applied.
 </t>
 </section>
    </section>
