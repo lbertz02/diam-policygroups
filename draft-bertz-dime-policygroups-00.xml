@@ -9,7 +9,7 @@
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category="std" docName="draft-bertz-dime-policygroups-00" ipr="pre5378Trust200902">
+<rfc category="std" docName="draft-bertz-dime-policygroups-01" ipr="pre5378Trust200902">
  <front>
    <title>Diameter Policy Groups and Sets</title>
 
@@ -128,6 +128,36 @@
     This mechanism creates a compact bit pattern to be used which notes
     when a Policy Entity or Policy Group applies to to an Authorized
     User.
+</t>
+<t>
+    An Authorized User's memberships are assigned by a
+    Policy-Membership.  A Policy Entity is assigned membership via
+    a Membership-Assignment.   Multiple assignments may be applied
+    to an Authorized User and Policy Entity but they MUST have unique
+    Membership Domain values.  It is also RECOMMENDED to avoid
+    numerous Policy-Membership assignments for an Authorized User as
+    it delays computation of the Policy Entities that should be
+    applied to their Service.
+</t>
+<t>
+    Memberships are matched by understanding the relationship between
+    their values which are represented as sets of bits.  These
+    relationships are descibed as Match-Types and are specified as
+    set relations, e.g. subset, superset, etc.
+</t>
+<t>
+    To determine if a Rule is assigned to the User the following
+    conditions MUST be true at least one Membership-Assignments
+    must exist where
+  <list>
+<t>
+    Policy-Membership's Membership-Domain = Membership-Assignment's
+    Membership-Domain
+</t><t>
+    Policy-Membership's Membership-Value MUST satisfy the Match-Type
+    for the Membership-Assignments' Membership-Value
+</t>
+  </list>
 </t>
 </section>
 <section title="Groups and Membership AVPs">
