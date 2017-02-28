@@ -9,7 +9,7 @@
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
-<rfc category="std" docName="draft-bertz-dime-policygroups-01" ipr="pre5378Trust200902">
+<rfc category="std" docName="draft-bertz-dime-policygroups-02" ipr="pre5378Trust200902">
  <front>
    <title>Diameter Policy Groups and Sets</title>
 
@@ -27,7 +27,7 @@
      </address>
    </author>
 
-   <date year="2016" />
+   <date year="2017" />
 
    <area>Operations and Management Area</area>
 
