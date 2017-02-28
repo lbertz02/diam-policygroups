@@ -49,17 +49,14 @@
  <middle>
    <section title="Introduction">
 <t>
-    Quite often policy applications will apply common policies over
-    multiple authorized endpoints.  These policies may be
-    pre-provisioned or dynamically installed on the Diamater Client
-    by the Diamater Server.
+    Policy applications often apply common policies to multiple
+    authorized users.  Bulk operations are often applied through the
+    use of group naming, e.g. 3GPP's use of Base Name.
 </t><t>
-    Techniques such as policy grouping, e.g. Base Name used in many
-    3GPP specifications or Bit Set values are applied.
-</t><t>
-    This document defines both a grouping mechanism, the Group-Name
-    AVP, and a membership (bit set) that can be used to quickly apply
-    one or more Diameter based policies, e.g. Filter-Rule <xref target="RFC5777"/>.
+    This document defines a grouping mechanism to apply common
+    operations to a group of policies and a membership set that can
+    be used to quickly apply one or more Diameter based policies,
+    e.g. Filter-Rule <xref target="RFC5777"/> to authorized users.
 </t>
 </section>
 <section title="Requirements Language">
@@ -106,16 +103,17 @@
 <t>
     Policy Groups represent a union of Policy Entities.  These entities
     MUST be of the same type, e.g. Filters <xref target="RFC7155"/> or Filter-Rules <xref target="RFC5777"/>.
-</t>
-<t>
+</t><t>
     When establishing groups and membership Sets an optional Base Name MAY
     be used.  It identifies the top level grouping.  Policy Entity groups
-    MAY be directly named as well.  When no Base Name is provided the value
-    a policy entity is considered to be part of the Base Name "" (empty string)
-    for any matching purposes.
+    MAY be directly named as well.   A Policy Entity's name MUST contain
+    zero or 1 separator character '/'.  The value before the separator is
+    a Base Name.  When no Base Name is provided, i.e. no separator is present.
+    The value of a policy entity is considered to be part of the Base Name
+    "" (empty string) for any matching purposes.  Base Name values MUST NOT
+    contain the '/' character.
 </t><t>
-    Base Name values create a two tier heirarchy for grouping.  However, a
-    Policy Entity can be applied to multiple, distinct sets of authorized
+    A Policy Entity can be applied to multiple, distinct sets of authorized
     Users.  These sets can be based upon their state (paid, past due, etc.),
     customer type (pre-paid, post-paid, etc.) or many other factors.
     In such cases, a Membership Domain is used.
@@ -123,13 +121,11 @@
     Membership Domains are named domains (UTF8Strings) with binary values
     stored in BitStrings to represent where the Policy Entity is used.
     A Policy Entity MAY appear in multiple Membership Domains.
-</t>
-<t>
+</t><t>
     This mechanism creates a compact bit pattern to be used which notes
     when a Policy Entity or Policy Group applies to to an Authorized
     User.
-</t>
-<t>
+</t><t>
     An Authorized User's memberships are assigned by a
     Policy-Membership.  A Policy Entity is assigned membership via
     a Membership-Assignment.   Multiple assignments may be applied
@@ -138,13 +134,44 @@
     numerous Policy-Membership assignments for an Authorized User as
     it delays computation of the Policy Entities that should be
     applied to their Service.
-</t>
-<t>
+</t><t>
     Memberships are matched by understanding the relationship between
     their values which are represented as sets of bits.  These
     relationships are descibed as Match-Types and are specified as
-    set relations, e.g. subset, superset, etc.
+    set relations, e.g. subset, superset, etc. <xref target="fig_refarch"/>
+    shows the reference model.
 </t>
+      <t>
+        <figure anchor="fig_refarch"
+                  title="Reference Model">
+            <artwork align="center"><![CDATA[
+                    0..1 +-----------+ 0..1
+          +------------->| Base-Name |<------------+
+          |              +-----+-----+             |
+          |               0..1 |       +-----------+-----------+
+          |                    |       | Membership-Assignment |
+          |                    |       +--------+--+-------+---+
+          |                    |         * ^    |  |       |
+          |                  * |           |    |  |       v
+          |             +------+--------+  |    |  | +------------+
+          |             | Policy Entity +--+    |  | | Match-Type |
+          |             +---------------+       |  | +------------+
+          |                                     |  |
++---------+---------+0..1  +-----------------+  |  |
+| Policy-Membership |<-----+ Authorized User |  |  |
++-----+---+---------+      +-----------------+  |  |
+      |   |                                     |  |
+      |   |         0..1+-------------------+   |  |
+      |   +------------>| Membership Domain |<--+  |
+      |                 +-------------------+ 0..1 |
+      v                                            |
++------------------+                               |
+| Membership-Value |<------------------------------+
++------------------+
+              ]]></artwork>
+            <postamble></postamble>
+          </figure>
+        </t>
 <t>
     To determine if a Rule is assigned to the User the following
     conditions MUST be true at least one Membership-Assignments
@@ -338,7 +365,7 @@
     Policy Entity to the Authorized User's session.
 </t>
 </section>
-<section title="Example">
+<section title="Examples">
 <section title="Rule Sets" anchor="rulesetex">
 <t>
   A policy administrator has defined three 'default rule sets' based
@@ -371,6 +398,17 @@
   OVERLAP.  Thus, any Policy-Membership whose Membership-Value is set
   to 1 or 2 will have this Filter-Rule applied.
 </t>
+</section>
+<section title="Default Route (Overlapping) Rules" anchor="defaultruleex">
+<t>
+  A common traffic rule is the default (all traffic) rule.  It is often
+  used as the lowest priority rule in a policy enforcement session.  Even
+  though the rule is typically the same, e.g. "any any", the actions taken
+  may vary, e.g. deny traffic, permit traffic, set quality of service.  To
+  distinguish the rules the use of the Membership-Domain in the
+  Membership-Assignment even when the Membership-Value MAY be the same.
+</t>
+</section>
 </section>
 <section anchor="IANA" title="IANA Considerations">
 <t>
@@ -414,7 +452,7 @@
   <c><xref target="matchtype"/></c>
   <c>Enumerated</c>
 </texttable>
-   </section>
+</section>
 <section anchor="Security" title="Security Considerations">
 <t>
     The use of Base-Names and Membership-Domain can unintentionally
@@ -445,7 +483,6 @@
    issues and requirements of the Diameter base protocol.
 </t>
 </section>
-   </section>
  </middle>
  <back>
    <references title="Normative References">
