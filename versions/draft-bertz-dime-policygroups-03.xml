@@ -26,6 +26,20 @@
        <email>lylebe551144@gmail.com</email>
      </address>
    </author>
+   
+   <author fullname="Mark Bales" initials="M." surname="Bales">
+     <organization>Sprint</organization>
+     <address>
+       <postal>
+         <street>6220 Sprint Parkway</street>
+         <city>Overland Park</city>
+         <region>KS</region>
+         <code>66251</code>
+         <country>United States</country>
+       </postal>
+       <email>yellowjeep2017@gmail.com</email>
+     </address>
+   </author>
 
    <date year="2017" />
 
@@ -134,10 +148,10 @@
     In such cases, a Membership Domain is used.
 </t><t>
     Membership Domains are named domains (UTF8Strings) with binary values
-    stored in BitStrings to represent where the Policy Entity is used.
+    stored in bit strings to represent where the Policy Entity is used.
     A Policy Entity MAY appear in multiple Membership Domains.
 </t><t>
-    This mechanism creates a compact bit pattern to be used which notes
+    Membership-Value is a compact bit pattern to be used which notes
     when a Policy Entity or Policy Group applies to to an Authorized
     User.
 </t><t>
@@ -383,35 +397,35 @@
 <section title="Examples">
 <section title="Rule Sets" anchor="rulesetex">
 <t>
-  A policy administrator has defined three 'default rule sets' based
-  upon various product options selected by a Customer.  Each rule set
+  A policy administrator defines Product X with 3 separate rules sets. 
+  The administrator creates the Membership-Domain "Product X" and Membership-Values 
+  of 1, 2 and 4 representing separate rule sets. For this example each rule set
   consists of twenty Filter-Rules as defined in <xref target="RFC5777"/>.
 </t>
 <t>
-  Rules that are part of Rule Set 1 are given a Membership-Value of
-  1, Rule Set 2 members are given the value 2 and Rule Set
-  three members have a value of 4 in their respective
-  Membership-Assignment values.  All Membership-Assignments have the
-  Membership-Domain of "Product X" and a Match-Type of EQ (Equals).
+  Each Rule Set is assigned a Membership-Value. Rule Set 1 is assigned a 
+  Membership-Value of 1, Rule Set 2 members is assigned the value 2 and Rule Set 
+  three members are assigned a value of 4.  All Membership-Assignments have the 
+  Membership-Domain of "Product X" and a Match-Type of EQ (Equals). 
 </t>
 <t>
-  When a User is Authorized for service usage, a Policy-Membership
-  value is provided with the appropriate Membership-Value set to
-  1, 2 or 4 and a Membership-Domain of "Product X".  The
-  Diameter Client can then appropriately the correct 20 Filter-Rules.
+  The policy administrator defines three users. User 1 is assigned the Membership-Domain 
+  of "Product X"" and Membership-Value of 1. User 2 is assigned a Membership-Domain of 
+  "Product X" and a Membership-Value of 2. User 3 is assigned a Membership-Domain of 
+  "Product X"" and Membership-Value of 4.
 </t>
  </section>
 <section title="Rule in multiple sets (1 Domain)" anchor="sharedruleex">
 <t>
   Expanding upon our example from above <xref target="rulesetex"/>, a new
-  Filter-Rule is added that is part of both Rule Set 1 and Rule
-  Set 2.
+  Filter-Rule is added that shall be part of Users with either Rule Set 1 or
+  Rule Set 2 of Product X.
 </t>
 <t>
-  According, the Membership-Assignment has a Membership-Domain of
-  "Product X", a Membership-Value of 3 and a Match-Type of
-  OVERLAP.  Thus, any Policy-Membership whose Membership-Value is set
-  to 1 or 2 will have this Filter-Rule applied.
+  Accordingly, the policy administrator defines the Membership-Assignment 
+  having a Membership-Domain of "Product X", a Membership-Value of 3 and 
+  a Match-Type of OVERLAP.  Thus, any Policy-Membership whose Membership-Value 
+  is set to 1 or 2 will have this Filter-Rule applied.
 </t>
 </section>
 <section title="Default Route (Overlapping) Rules" anchor="defaultruleex">
