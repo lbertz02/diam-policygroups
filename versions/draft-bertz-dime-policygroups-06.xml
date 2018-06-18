@@ -270,7 +270,7 @@
                 </t>
                 <figure>
                     <artwork><![CDATA[
-                        Membership-Assignment ::= < AVP Header: TBD3 >
+                     Membership-Assignment ::= < AVP Header: TBD3 >
                         { Membership-Value }
                         { Match-Type }
                         [ Membership-Domain ]
