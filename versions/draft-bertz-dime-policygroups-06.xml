@@ -242,7 +242,7 @@
                 </t>
                 <figure>
                     <artwork><![CDATA[
-                        Policy-Membership ::= < AVP Header: TBD2 >
+            Policy-Membership ::= < AVP Header: TBD2 >
                         { Membership-Value }
                         [ Membership-Domain ]
                         [ Base-Name ]
