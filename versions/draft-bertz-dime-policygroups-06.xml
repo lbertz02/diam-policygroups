@@ -98,7 +98,7 @@
                 <list style="hanging">
                     <t hangText="Authorized Users">
                         An Entity that has been authorized to use a service via a
-                        Diamater Application.
+                        Diameter Application.
                     </t>
                     <t hangText="Base Name">
                         An organizational structure used to define a domain for multiple
@@ -166,7 +166,7 @@
             </t><t>
                 Memberships are matched by understanding the relationship between
                 their values which are represented as sets of bits.  These
-                relationships are descibed as Match-Types and are specified as
+                relationships are described as Match-Types and are specified as
                 set relations, e.g. subset, superset, etc. <xref target="fig_refarch"/>
                 shows the reference model.
             </t>
@@ -242,7 +242,7 @@
                 </t>
                 <figure>
                     <artwork><![CDATA[
-            Policy-Membership ::= < AVP Header: TBD2 >
+                        Policy-Membership ::= < AVP Header: TBD2 >
                         { Membership-Value }
                         [ Membership-Domain ]
                         [ Base-Name ]
@@ -251,7 +251,7 @@
                 </figure>
                 <t>
                     Multiple Policy-Membership values MAY be assigned to an
-                    Authorzied User.  However, assigning multiple Policy-Memberships
+                    Authorized User.  However, assigning multiple Policy-Memberships
                     to an Authorized Users MAY delay policy enforcement as membership
                     determination time is increased and SHOULD be avoided.
                 </t>
@@ -373,7 +373,7 @@
             <t>
                 Membership-Assignments MAY occur at any time in the lifecycle of
                 the Policy Entity.  However, there is no guarantee that resources
-                exist on the Diameter Client to perform a re-evualation of the
+                exist on the Diameter Client to perform a re-evaluation of the
                 membership of all Authorized Users.   A Diameter Server MUST NOT
                 assume that re-evaluation will occur or that an evaluation will
                 occur immediately.
@@ -383,8 +383,8 @@
                 the Authorized User's session.  It is expected that sufficient
                 resources exist to perform a re-evaluation of applicable Policy
                 Entities based upon Membership testing.  If this cannot be done
-                a Diameter Applicaiton level appropriate message MUST be sent to
-                the Diamater Server.
+                a Diameter Application level appropriate message MUST be sent to
+                the Diameter Server.
             </t>
             <t>
                 Generally, Base-Name assignment SHOULD occur upon creation of a
@@ -495,7 +495,7 @@
                 provide user information if it is too explicit, e.g.
                 "Bobs' Policies".  It is RECOMMENDED that an operator consider
                 the values it assigns and ensure they provide no user or
-                group speicific information.
+                group specific information.
             </t>
             <t>
                 As bit and test patterns the data provided by the
@@ -504,7 +504,7 @@
                 relationship.  However, it is no different than if one has
                 access to the information transmitted between the Diameter
                 Client and Server today (if the Base-Names and
-                Membership-Domains) follow the reommendations in this section.
+                Membership-Domains) follow the recommendations in this section.
             </t>
             <t>
                 In either case, access to the Diameter communications is still
